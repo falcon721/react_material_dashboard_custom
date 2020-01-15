@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import uuid from 'uuid/v1';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
@@ -8,7 +9,8 @@ import {
   Menu,
   MenuItem,
   ListItemText,
-  Typography
+  Typography,
+  colors
 } from '@material-ui/core';
 import { ToggleButtonGroup, ToggleButton } from '@material-ui/lab';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
@@ -18,6 +20,7 @@ import Paginate from 'src/components/Paginate';
 import ProjectCard from 'src/components/ProjectCard';
 import Cards from './CollabCard';
 import SearchBar from 'src/components/SearchBar';
+import { readBuilderProgram, ExitStatus, getCombinedModifierFlags } from 'typescript';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -53,6 +56,15 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(3),
     display: 'flex',
     justifyContent: 'center'
+  },
+  card: {
+    '&:hover': {
+      borderRadius: 5,
+      borderStyle: 'solid',
+      borderWidth: 2,
+      color: colors.red[600],
+      
+    }
   }
 }));
 
@@ -64,8 +76,7 @@ function Results({ className, ...rest }) {
   const [mode, setMode] = useState('grid');
   const [collabs, setCollabs] = useState([]);
   const [searchresult, setSearchresult] = useState([]);
-
-  const [getSearchValue, setSearchValue] = useState('David');
+  const [searchValue, setSearchValue] = useState('');
 
   const handleSortOpen = () => {
     setOpenSort(true);
@@ -83,28 +94,74 @@ function Results({ className, ...rest }) {
   const handleModeChange = (event, value) => {
     setMode(value);
   };
-  
-  const handleSearch = (event) => {
-    
-    // axios.get('/api/collabs').then((response) => {
-    //     // var search_result = [];
-    //     if(getSearchValue === null){
-    //       this.search_result = response.data.collabprofile;
-    //     } else {
-          
-    //       response.data.collabprofile.map((item) => {
-            
-    //         if(item.name === getSearchValue){
-    //           this.search_result.push(item);
-    //           alert(this.search_result.name);
-    //         }
-    //       });
-    //   }
-    //   setSearchresult(this.search_result);
-    // });
-  };       
-  
 
+  const handleSearch = () => {
+    
+    let mounted = true;
+    
+    axios.get('/api/collabs').then((response) => {
+      if (mounted) {
+        alert(searchValue);
+        response.data.collabprofile.map((item) => {
+          if(item.name === searchValue){
+            setSearchresult(item);
+            
+          }
+          else{
+            //alert(searchValue);
+          }
+        });
+        
+        setCollabs(searchresult);
+      }
+      mounted = false;
+    });
+  };
+
+  const handleChange = () => {
+    
+    let mounted = true;
+    
+    axios.get('/api/collabs').then((response) => {
+      if (mounted) {
+        alert(searchValue);
+        response.data.collabprofile.map((item) => {
+          if(item.name === searchValue){
+            setSearchresult(item);
+            
+          }
+          else{
+            //alert(searchValue);
+          }
+        });
+        
+        setCollabs(searchresult);
+      }
+      mounted = false;
+    });
+  };
+  // useEffect(() => {
+  //   let mounted = true;
+
+  //   const handleSearch = (event) => {
+  //     axios.get('/api/collabs').then((response) => {
+  //       if (mounted) {
+  //         response.data.collabprofile.map((item) => {
+  //           if(item.name === searchValue){
+  //             setSearchresult(item);
+  //           }
+  //         })
+  //         setCollabs(searchresult);
+  //       }
+  //     });
+  //   };
+
+  //   handleSearch();
+
+  //   return () => {
+  //     mounted = false;
+  //   };
+  // }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -132,6 +189,7 @@ function Results({ className, ...rest }) {
       <SearchBar
         onSearch={handleSearch}
         onSearchValue={setSearchValue}
+        onChange={handleChange}
       />
       <Grid
         container
@@ -141,6 +199,7 @@ function Results({ className, ...rest }) {
         {collabs.map((collab) => (
           <Grid
             item
+            className={classes.card}
             key={collab.id}
             md={mode === 'grid' ? 4 : 12}
             sm={mode === 'grid' ? 6 : 12}

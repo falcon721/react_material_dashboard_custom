@@ -57,17 +57,14 @@ function Header({ className, ...rest }) {
           gutterBottom
           variant="h1"
         >
-          Devias React Material Kit - PRO
+          Influencer Business Application
         </Typography>
         <Typography
           align="center"
           component="h2"
           variant="subtitle1"
         >
-          A professional kit that comes with ready-to-use Material-UI©
-          components developed with one common goal in mind, help you build
-          faster &amp; beautiful applications. Each component is fully
-          customizable, responsive and easy to integrate.
+          
         </Typography>
         <div className={classes.buttons}>
           <Button

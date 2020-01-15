@@ -36,13 +36,11 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function Search({ onSearch, className, setSearchValue, ...rest }) {
+function Search({ className, setSearchValue, onSearch, onChange, ...rest }) {
   const classes = useStyles();
 
-  // const [getSearchValue, setSearchValue] = useState(null);
-
   const handleChangeValue = (event) => {
-    //setSearchValue(event.target.value);
+    setSearchValue(event.target.value);
   }
 
   return (

@@ -197,6 +197,7 @@ function TopBar({
       {...rest}
       className={clsx(classes.root, className)}
       color="primary"
+      // style={{backgroundColor: colors.amber[600]}}
     >
       <Toolbar>
         <Hidden lgUp>
